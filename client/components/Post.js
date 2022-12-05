@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 import { AiOutlineHeart } from "react-icons/ai";
 
 const style = {
-  wrapper: `flex p-3 border-b border-[#38444d] `,
+  wrapper: `flex p-3 border-b border-primaryContrast dark:border-primaryContrastDark `,
   profileImage: `rounded-full h-[40px] w-[40px] object-cover`,
   postMain: `flex-1 px-4`,
   headerDetails: `flex items-center`,
@@ -16,7 +16,7 @@ const style = {
   tweet: `my-2`,
   image: `rounded-3xl`,
   footer: `flex justify-between sm:px-8 mt-4 text-[#8899a6] mx-auto`,
-  footerIcon: `rounded-full text-lg p-2`,
+  footerIcon: `rounded-full text-lg p-2 cursor-pointer`,
 };
 const Post = ({
   displayName,
@@ -57,22 +57,22 @@ const Post = ({
         </div>
         <div className={style.footer}>
           <div
-            className={`${style.footerIcon} hover:text-[#1d9bf0] hover:bg-[#1e364a]`}
+            className={`${style.footerIcon} hover:bg-[#1d9bf033] hover:text-[#1d9bf0]`}
           >
             <FaRegComment />
           </div>
           <div
-            className={`${style.footerIcon} hover:text-[#03ba7c] hover:bg-[#1b393b]`}
+            className={`${style.footerIcon} hover:bg-[#00ba7c33] hover:text-[#03ba7c]`}
           >
             <FaRetweet />
           </div>
           <div
-            className={`${style.footerIcon} hover:text-[#f91c80] hover:bg-[#39243c]`}
+            className={`${style.footerIcon} hover:bg-[#f9188033] hover:text-[#f91c80]`}
           >
             <AiOutlineHeart />
           </div>
           <div
-            className={`${style.footerIcon} hover:text-[#1d9bf0] hover:bg-[#1e364a]`}
+            className={`${style.footerIcon} hover:bg-[#1d9bf033] hover:text-[#1d9bf0]`}
           >
             <FiShare />
           </div>

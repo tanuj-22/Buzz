@@ -2,14 +2,14 @@ import { news, whoToFollow } from "../lib/static";
 import { BiSearch } from "react-icons/bi";
 
 const style = {
-  wrapper: `flex-[1] p-4 hidden md:block`,
-  searchBar: `flex items-center bg-[#243340] p-2 rounded-3xl`,
+  wrapper: `flex-[1] p-4 hidden md:block lg:mr-[3%] lg:ml-[1%]`,
+  searchBar: `flex items-center bg-[#EFF3F4] dark:bg-[#243340] p-2 rounded-3xl`,
   searchIcon: `text-[#8899a6] mr-2`,
   inputBox: `bg-transparent outline-none`,
-  section: `bg-[#192734] my-6 rounded-xl overflow-hidden`,
-  title: `p-2 font-bold text-lg`,
-  showMore: `p-2 text-[#1d9bf0] text-sm cursor-pointer hover:bg-[#22303c]`,
-  item: `flex items-center p-3 my-2 hover:bg-[#22303c] cursor-pointer`,
+  section: `bg-secondaryBgl dark:bg-secondaryBgd my-6 rounded-xl overflow-hidden `,
+  title: `p-4 font-bold text-lg`,
+  showMore: `p-4 text-[#1d9bf0] text-sm cursor-pointer hover:bg-secondaryHover dark:hover:bg-secondaryHoverDark`,
+  item: `flex items-center p-3 my-2 hover:bg-secondaryHover dark:hover:bg-secondaryHoverDark cursor-pointer`,
   newsItemLeft: `flex-1`,
   newsItemCategory: `text-[#8899a6] text-xs font-semibold`,
   newsItemTitle: `text-sm font-bold`,
@@ -20,12 +20,13 @@ const style = {
   profileDetails: `flex-1`,
   name: `font-bold`,
   handle: `text-[#8899a6]`,
-  followButton: `bg-white text-black px-3 py-1 rounded-full text-xs font-bold`,
+  followButton: `bg-black text-white dark:bg-white dark:text-black px-3 py-1 rounded-full text-xs font-bold`,
 };
 
 function Widgets() {
   return (
     <div className={style.wrapper}>
+      
       <div className={style.searchBar}>
         <BiSearch className={style.searchIcon} />
         <input
