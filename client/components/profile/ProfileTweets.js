@@ -1,65 +1,36 @@
 import React from "react";
 import Post from "../Post";
+import { useContext } from "react";
+import { TwitterContext } from "../../context/TwitterContext";
 const style = {
   wrapper: `no-scrollbar`,
   header: `sticky top-0 bg-[#15202b] z-10 p-4 flex justify-between items-center`,
   headerTitle: `text-xl font-bold`,
 };
 
-const tweets = [
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2021-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2021-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2021-03-21T18:30:00.000Z",
-  },
-];
 const ProfileTweets = () => {
+  const { currentAccount, currentUser, tweets } = useContext(TwitterContext);
+
   return (
     <div className={style.wrapper}>
-      {tweets.map((tweet, index) => (
-        <Post
-          key={index}
-          displayName={tweet.displayName}
-          userName={`${tweet.userName.slice(0, 4)}...${tweet.userName.slice(
-            -4
-          )}`}
-          avatar={tweet.avatar}
-          text={tweet.text}
-          isProfileImageNft={tweet.isProfileImageNft}
-          timestamp={tweet.timestamp}
-        />
-      ))}
+      {currentUser.tweets &&
+        currentUser.tweets.map((tweet, index) => (
+          <Post
+            key={index}
+            displayName={
+              currentUser.name === "Unnamed"
+                ? `${currentAccount.slice(0, 4)}...${currentAccount.slice(-4)}`
+                : currentUser.name
+            }
+            userName={`${currentAccount.slice(0, 4)}...${currentAccount.slice(
+              -4
+            )}`}
+            avatar={currentUser.profileImage}
+            text={tweet.tweet}
+            isProfileImageNft={currentUser.isProfileImageNft}
+            timestamp={tweet.timestamp}
+          />
+        ))}
     </div>
   );
 };

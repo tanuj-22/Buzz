@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-
+import { TwitterContext } from "../../context/TwitterContext";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { useRouter } from "next/router";
 
@@ -13,7 +13,8 @@ const style = {
   coverPhoto: `object-cover h-full w-full`,
   profileImageContainer: `w-full h-[8rem] rounded-full mt-[-4rem] mb-2 flex justify-start items-center px-3 flex justify-between`,
   profileImage: `object-cover rounded-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd  h-full`,
-  profileImageNft: `object-cover h-full`,
+  nftImageContainer: `object-cover h-full w-12 h-12 bg-primaryBgl dark:bg-primaryBgd`,
+  profileImageNft: `object-cover h-[8rem] w-[8rem] h-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd`,
   profileImageMint: `bg-white text-black px-3 py-1 rounded-full hover:bg-[#8899a6] cursor-pointer`,
   details: `px-3`,
   nav: `flex justify-around mt-4 mb-2 text-xs font-semibold text-[#8899a6]`,
@@ -21,9 +22,29 @@ const style = {
 };
 
 const ProfileHeader = () => {
+  const { currentAccount, currentUser } = useContext(TwitterContext);
   const router = useRouter();
-  const isProfileImageNft = false;
-  const currentAccount = "0x123adfe32af32423421adffee";
+  const [userData, setUserData] = useState({
+    name: "",
+    profileImage: "",
+    coverImage: "",
+    walletAddress: "",
+    tweets: [],
+    isProfileImageNft: false,
+  });
+  useEffect(() => {
+    if (!currentUser) return;
+
+    setUserData({
+      name: currentUser.name,
+      profileImage: currentUser.profileImage,
+      walletAddress: currentUser.walletAddress,
+      coverImage: currentUser.coverImage,
+      tweets: currentUser.tweets,
+      isProfileImageNft: currentUser.isProfileImageNft,
+    });
+  }, [currentUser]);
+
   return (
     <div className={style.wrapper}>
       <div className={style.header}>
@@ -31,33 +52,59 @@ const ProfileHeader = () => {
           <BsArrowLeftShort />
         </div>
         <div className={style.details}>
-          <div className={style.primary}>Tanuj Pancholi</div>
-          <div className={style.secondary}>3 tweets</div>
+          <div className={style.primary}>{userData.name}</div>
+          <div className={style.secondary}>
+            {userData.tweets && userData.tweets.length} Tweets
+          </div>
         </div>
       </div>
       <div className={style.coverPhotoContainer}>
-        <img
-          src="https://pbs.twimg.com/profile_banners/185142711/1658960675/1500x500"
-          alt="cover"
-          className={style.coverPhoto}
-        />
+        {userData.coverImage ? (
+          <img
+            src={userData.coverImage}
+            alt="cover"
+            className={style.coverPhoto}
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "https://via.placeholder.com/300X100";
+            }}
+          />
+        ) : (
+          <div className={`${style.coverPhoto} h-[200px] bg-slate-500`}></div>
+        )}
       </div>
       <div>
-        <div
-          className={isProfileImageNft ? "hex" : style.profileImageContainer}
-        >
-          <img
-            src="https://bafybeice3lmabcb7z4kesudbv7mmtnhklvetuz3y5utcwdmuwfpkksngza.ipfs.w3s.link/profile10.jpg"
-            alt="profile"
-            className={
-              isProfileImageNft ? style.profileImageNft : style.profileImage
-            }
-          />
-        </div>
+        {userData.profileImage ? (
+          <div className={style.profileImageContainer}>
+            {userData.isProfileImageNft ? (
+              <>
+                <img
+                  src={userData.profileImage}
+                  alt="profile"
+                  className={`${style.profileImageNft} hex`}
+                />
+              </>
+            ) : (
+              <img
+                src={userData.profileImage}
+                alt="profile"
+                className={style.profileImage}
+              />
+            )}
+          </div>
+        ) : (
+          <>
+            <div className={style.profileImageContainer}>
+              <div
+                className={`${style.profileImage}  h-[128px] w-[128px] bg-slate-500`}
+              ></div>
+            </div>
+          </>
+        )}
       </div>
       <div className={style.details}>
         <div>
-          <div className={style.primary}>Tanuj Pancholi</div>
+          <div className={style.primary}>{userData.name}</div>
         </div>
         <div className={style.secondary}>
           {currentAccount && (

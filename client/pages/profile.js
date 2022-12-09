@@ -18,7 +18,7 @@ const profile = () => {
   return (
     <div className={style.wrapper}>
       {/* <div className={style.content}> */}
-      <Sidebar />
+      <Sidebar initialSelectedIcon={"Profile"} />
       <div className={style.mainContent}>
         <ProfileHeader />
         <ProfileTweets />

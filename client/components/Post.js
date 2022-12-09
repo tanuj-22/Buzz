@@ -29,15 +29,23 @@ const Post = ({
   return (
     <div className={style.wrapper}>
       <div>
-        <img
-          src={avatar}
-          alt={userName}
-          className={
-            isProfileImageNft
-              ? `${style.profileImage} smallHex`
-              : style.profileImage
-          }
-        />
+        {avatar ? (
+          <img
+            src={avatar}
+            alt={userName}
+            className={
+              isProfileImageNft
+                ? `${style.profileImage} smallHex`
+                : style.profileImage
+            }
+          />
+        ) : (
+          <>
+            <div
+              className={`${style.profileImage} h-[40px] w-[40px] bg-slate-400`}
+            ></div>
+          </>
+        )}
       </div>
       <div className={style.postMain}>
         <div>

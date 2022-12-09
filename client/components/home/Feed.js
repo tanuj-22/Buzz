@@ -1,99 +1,21 @@
 import { BsStars } from "react-icons/bs";
 import TweetBox from "./TweetBox";
 import Post from "../Post";
-
+import { useContext, useEffect } from "react";
+import { TwitterContext } from "../../context/TwitterContext";
+import { client } from "../../lib/client";
 const style = {
   // wrapper: `flex-[2] border-r border-l border-primaryContrast dark:border-primaryContrastDark`,
   wrapper: `flex-[1.7] border-r border-l border-primaryContrast dark:border-primaryContrastDark max-w-2xl  sm:ml-[80px] lg:ml-[24%] `,
-  header: `border-b border-primaryContrast dark:border-primaryContrastDark sm:border-0  sm:ml-0 sticky top-0 bg-primaryBgl dark:bg-primaryBgd z-10 p-4 flex justify-between items-center`,
+  header: `border-b border-primaryContrast z-10 dark:border-primaryContrastDark sm:border-0  sm:ml-0 sticky top-0 bg-primaryBgl dark:bg-primaryBgd p-4 flex justify-between items-center`,
   headerTitle: `text-xl font-bold ml-12 sm:ml-0`,
 };
 
-const tweets = [
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeice3lmabcb7z4kesudbv7mmtnhklvetuz3y5utcwdmuwfpkksngza.ipfs.w3s.link/profile10.jpg",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2021-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeice3lmabcb7z4kesudbv7mmtnhklvetuz3y5utcwdmuwfpkksngza.ipfs.w3s.link/profile10.jpg",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2021-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeice3lmabcb7z4kesudbv7mmtnhklvetuz3y5utcwdmuwfpkksngza.ipfs.w3s.link/profile10.jpg",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2021-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-  {
-    displayName: "John Doe",
-    userName: "johndoe",
-    avatar:
-      "https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png",
-    text: "gm",
-    isProfileImageNft: false,
-    timestamp: "2022-03-21T18:30:00.000Z",
-  },
-];
-
 function Feed() {
+  const { tweets, fetchTweets } = useContext(TwitterContext);
+
+  
+
   return (
     <div className={`${style.wrapper}`}>
       <div className={style.header}>
@@ -104,13 +26,14 @@ function Feed() {
       {tweets.map((tweet, index) => (
         <Post
           key={index}
-          displayName={tweet.displayName}
-          userName={`${tweet.userName.slice(0, 4)}...${tweet.userName.slice(
-            -4
-          )}`}
-          avatar={tweet.avatar}
-          text={tweet.text}
-          isProfileImageNft={tweet.isProfileImageNft}
+          displayName={tweet.author.name}
+          userName={`${tweet.author.walletAddress.slice(
+            0,
+            4
+          )}...${tweet.author.walletAddress.slice(-4)}`}
+          avatar={tweet.author.profileImage}
+          text={tweet.tweet}
+          isProfileImageNft={tweet.author.isProfileImageNft}
           timestamp={tweet.timestamp}
         />
       ))}

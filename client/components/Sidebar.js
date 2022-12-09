@@ -8,7 +8,10 @@ import { FiBell, FiMoreHorizontal } from "react-icons/fi";
 import { HiOutlineMail, HiMail } from "react-icons/hi";
 import { FaRegListAlt, FaHashtag, FaBell } from "react-icons/fa";
 import { CgMoreO } from "react-icons/cg";
-
+import { useContext } from "react";
+import { TwitterContext } from "../context/TwitterContext";
+import Modal from "react-modal";
+import ProfileImageMinter from "./mintingModal/ProfileImageMinter";
 import {
   BsBookmark,
   BsBookmarkFill,
@@ -16,18 +19,20 @@ import {
   BsPersonFill,
 } from "react-icons/bs";
 import { useRouter } from "next/router";
+import { customStyles } from "../lib/constants";
 
 const style = {
   // wrapper: `hidden sm:flex flex-[0.7] px-8 flex-col h-full fixed`,
   wrapper: `fixed z-40 sm:flex sm:flex-[0.7] sm:flex-col sm:h-full items-center xl:items-start lg:w-[15%] sm:p-2 lg:ml-12`,
   twitterIconContainer: `text-[#1d9bf0] dark:text-white hidden sm:inline text-3xl m-4 items-start`,
-  tweetButton: `text-white hidden lg:flex bg-[#1d9bf0] hover:bg-[#1b8cd8] items-center justify-center font-bold rounded-3xl h-[50px] mt-[20px] cursor-pointer`,
-  navContainer: `hidden sm:inline sm:flex-1`,
+  tweetButton: `text-white  flex flex-col bg-[#1d9bf0] hover:bg-[#1b8cd8] items-center justify-center font-bold rounded-3xl h-[50px] mt-[20px] cursor-pointer`,
+  tweetButtonMobile: `text-white w-20 bg-[#1d9bf0] flex flex-col justify-center text-center align-center hover:bg-[#1b8cd8] font-bold rounded-2xl h-[40px] mr-4 mt-2 cursor-pointer`,
+  navContainer: `hidden sm:inline sm:flex-1 w-full`,
   mobNavContainer: `z-60 fixed bottom-0 flex flex-grow bg-primaryBgl dark:bg-primaryBgd border-t border-primaryContrast dark:border-primaryContrastDark w-full flex-row sm:hidden`,
   profileButton: `sticky sm:border-0 pb-3 p-4 items-start sm:static sm:flex sm:items-center sm:mb-6 cursor-pointer hover:bg-primaryHover dark:hover:bg-primaryHoverDark sm:rounded-[100px] sm:p-2 lg:w-max`,
   profileLeft: `  sm:flex sm:item-center sm:justify-center lg:mr-4`,
-  profileImage: `z-40 height-8 w-8 sm:static sm:height-12 sm:w-12 rounded-full object-contain`,
-  profileImageProfile: `hidden sm:block z-40 height-8 w-8 sm:static sm:height-12 sm:w-12 rounded-full object-contain`,
+  profileImage: `z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-contain`,
+  profileImageProfile: `hidden sm:block z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-contain`,
   profileRight: `flex-1 hidden lg:flex`,
   details: `flex-1 `,
   name: `text-lg`,
@@ -38,6 +43,7 @@ const style = {
 function Sidebar({ initialSelectedIcon = "Home" }) {
   const [selected, setSelected] = useState(initialSelectedIcon);
   const router = useRouter();
+  const { currentUser, currentAccount } = useContext(TwitterContext);
   return (
     <div className={style.wrapper}>
       <div className={style.twitterIconContainer}>
@@ -92,7 +98,14 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
         />
         <SidebarOption Icon={CgMoreO} text="More" setSelected={setSelected} />
 
-        <div className={style.tweetButton}>Tweet</div>
+        <div
+          onClick={() =>
+            router.push(`${router.pathname}/?mint=${currentAccount}`)
+          }
+          className={style.tweetButton}
+        >
+          Mint
+        </div>
       </div>
       <div className={style.mobNavContainer}>
         <SidebarOption
@@ -122,29 +135,64 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
           isActive={Boolean(selected === "Messages")}
           setSelected={setSelected}
         />
+        <div
+          onClick={() =>
+            router.push(`${router.pathname}/?mint=${currentAccount}`)
+          }
+          className={style.tweetButtonMobile}
+        >
+          Mint
+        </div>
       </div>
-      <div className={style.profileButton}>
+      <div
+        className={style.profileButton}
+        onClick={() => router.push("/profile")}
+      >
         <div className={style.profileLeft}>
-          <img
-            src="https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png"
-            alt="profile"
-            className={
-              router.pathname === "/profile"
-                ? style.profileImageProfile
-                : style.profileImage
-            }
-          />
+          {currentUser.profileImage ? (
+            <img
+              // https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png
+              src={currentUser.profileImage}
+              alt="profile"
+              className={
+                currentUser.isProfileImageNft
+                  ? `${
+                      router.pathname === "/profile"
+                        ? style.profileImageProfile
+                        : style.profileImage
+                    }  hex`
+                  : router.pathname === "/profile"
+                  ? style.profileImageProfile
+                  : style.profileImage
+              }
+            />
+          ) : (
+            <>
+              <div
+                className={`${style.profileImage} h-8 w-8 bg-slate-400 sm:static sm:h-12  sm:w-12`}
+              ></div>
+            </>
+          )}
         </div>
         <div className={style.profileRight}>
           <div className={style.details}>
-            <div className={style.name}>Name</div>
-            <div className={style.handle}>@handle</div>
+            <div className={style.name}>{currentUser.name}</div>
+            <div className={style.handle}>
+              @{`${currentAccount.slice(0, 4)}...${currentAccount.slice(-2)}`}
+            </div>
           </div>
           <div className={style.moreContainer}>
             <FiMoreHorizontal />
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={Boolean(router.query.mint)}
+        onRequestClose={() => router.back()}
+        style={customStyles}
+      >
+        <ProfileImageMinter />
+      </Modal>
     </div>
   );
 }

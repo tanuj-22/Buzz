@@ -3,11 +3,15 @@ import { BsCardImage, BsEmojiSmile } from "react-icons/bs";
 import { RiFileGifLine, RiBarChartHorizontalFill } from "react-icons/ri";
 import { IoMdCalendar } from "react-icons/io";
 import { MdOutlineLocationOn } from "react-icons/md";
+import { client } from "../../lib/client";
+import { useContext } from "react";
+import { TwitterContext } from "../../context/TwitterContext";
+import { useRouter } from "next/router";
 const style = {
-  wrapper: `hidden px-4 sm:flex flex-row border-b border-primaryContrast dark:border-primaryContrastDark pb-4`,
+  wrapper: `mt-2 px-4 sm:flex flex-row border-b border-primaryContrast dark:border-primaryContrastDark pb-4`,
   tweetBoxLeft: `mr-4`,
   tweetBoxRight: `flex-1 `,
-  profileImage: `height-12 w-12 rounded-full`,
+  profileImage: `h-12 w-12 rounded-full`,
   inputField: `sm:mt-2 sm:pt-1 w-full h-auto outline-none bg-transparent text-xl resize-none placeholder:text-[#0f141999] dark:placeholder:text-[#8899a6]`,
   formLowerContainer: `flex mt-2`,
   iconsContainer: `text-[#1d9bf0] flex flex-1 items-center`,
@@ -19,24 +23,70 @@ const style = {
 
 const TweetBox = () => {
   const [tweetMessage, setTweetMessage] = useState("");
+  const router = useRouter();
+  const { currentAccount, currentUser, fetchTweets, doTweet } =
+    useContext(TwitterContext);
   const textareaRef = useRef(null);
-  const postTweet = (e) => {
+  const postTweet = async (e) => {
     e.preventDefault();
-    console.log(tweetMessage);
+    if (!tweetMessage) return;
+    const tweetId = `${currentAccount}_${Date.now()}`;
+    const tweetDoc = {
+      _id: tweetId,
+      _type: "tweets",
+      tweet: tweetMessage,
+      timestamp: new Date(Date.now()).toISOString(),
+      author: {
+        _type: "reference",
+        _ref: currentAccount,
+        _key: tweetId,
+      },
+    };
+    setTweetMessage("");
+    await doTweet(tweetDoc);
+    // router.push("/");
+
+    // await client.createIfNotExists(tweetDoc);
+
+    // await client
+    //   .patch(currentAccount)
+    //   .setIfMissing({ tweets: [] })
+    //   .insert("after", "tweets[-1]", [
+    //     {
+    //       _key: tweetId,
+    //       _ref: tweetId,
+    //       _type: "reference",
+    //     },
+    //   ])
+    //   .commit();
+
+    // await fetchTweets();
   };
   useEffect(() => {
     textareaRef.current.style.height = "0px";
     const scrollHeight = textareaRef.current.scrollHeight;
     textareaRef.current.style.height = scrollHeight + "px";
-}, [tweetMessage]);
+  }, [tweetMessage]);
   return (
     <div className={style.wrapper}>
       <div className={style.tweetBoxLeft}>
-        <img
-          src="https://bafybeigxwfhwwp6szduoq6qvoqro24524b6m7vqja5gnzh2qsiauh2gpre.ipfs.w3s.link/profile9.png"
-          alt="profile image"
-          className={style.profileImage}
-        />
+        {currentUser.profileImage ? (
+          <img
+            src={currentUser.profileImage}
+            alt="profile image"
+            className={
+              currentUser.isProfileImageNft
+                ? `${style.profileImage} hex`
+                : style.profileImage
+            }
+          />
+        ) : (
+          <>
+            <div
+              className={`${style.profileImage} h-12 w-12 bg-slate-400`}
+            ></div>
+          </>
+        )}
       </div>
       <div className={style.tweetBoxRight}>
         <form>
