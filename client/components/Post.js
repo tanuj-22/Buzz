@@ -4,7 +4,7 @@ import { FaRegComment, FaRetweet } from "react-icons/fa";
 import { FiShare } from "react-icons/fi";
 import { format } from "timeago.js";
 import { AiOutlineHeart } from "react-icons/ai";
-
+import {parseTwitterDate} from "../lib/utils";
 const style = {
   wrapper: `flex p-3 border-b border-primaryContrast dark:border-primaryContrastDark `,
   profileImage: `rounded-full h-[40px] w-[40px] object-cover`,
@@ -58,7 +58,7 @@ const Post = ({
             )}
 
             <span className={style.handleAndTimeAgo}>
-              @{userName} • {format(new Date(timestamp).getTime())}
+              @{userName} • {parseTwitterDate(timestamp)}
             </span>
           </span>
           <div className={style.tweet}>{text}</div>
