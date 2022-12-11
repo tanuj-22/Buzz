@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { VscTwitter } from "react-icons/vsc";
+import {GiHummingbird} from "react-icons/gi";
 import SidebarOption from "./SidebarOption";
 import { RiHome7Line, RiHome7Fill, RiFileList2Fill } from "react-icons/ri";
 import Link from "next/link";
@@ -24,19 +25,19 @@ import { customStyles } from "../lib/constants";
 const style = {
   // wrapper: `hidden sm:flex flex-[0.7] px-8 flex-col h-full fixed`,
   wrapper: `fixed z-40 sm:flex sm:flex-[0.7] sm:flex-col sm:h-full items-center xl:items-start lg:w-[15%] sm:p-2 lg:ml-12`,
-  twitterIconContainer: `text-[#1d9bf0] dark:text-white hidden sm:inline text-3xl m-4 items-start`,
-  tweetButton: `text-white  flex flex-col bg-[#1d9bf0] hover:bg-[#1b8cd8] items-center justify-center font-bold rounded-3xl h-[50px] mt-[20px] cursor-pointer`,
-  tweetButtonMobile: `text-white w-20 bg-[#1d9bf0] flex flex-col justify-center text-center align-center hover:bg-[#1b8cd8] font-bold rounded-2xl h-[40px] mr-4 mt-2 cursor-pointer`,
+  twitterIconContainer: `text-twitter dark:text-white hidden sm:inline text-3xl m-4 items-start`,
+  tweetButton: `text-white  flex flex-col bg-twitter hover:bg-twitterDark items-center justify-center font-bold rounded-3xl h-[50px] mt-[20px] cursor-pointer`,
+  tweetButtonMobile: `text-white w-20 bg-twitter flex flex-col justify-center text-center align-center hover:bg-twitterDark font-bold rounded-2xl h-[40px] mr-4 mt-2 cursor-pointer`,
   navContainer: `hidden sm:inline sm:flex-1 w-full`,
   mobNavContainer: `z-60 fixed bottom-0 flex flex-grow bg-primaryBgl dark:bg-primaryBgd border-t border-primaryContrast dark:border-primaryContrastDark w-full flex-row sm:hidden`,
   profileButton: `sticky sm:border-0 pb-3 p-4 items-start sm:static sm:flex sm:items-center sm:mb-6 cursor-pointer hover:bg-primaryHover dark:hover:bg-primaryHoverDark sm:rounded-[100px] sm:p-2 lg:w-max`,
   profileLeft: `  sm:flex sm:item-center sm:justify-center lg:mr-4`,
-  profileImage: `z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-contain`,
+  profileImage: `z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-cover`,
   profileImageProfile: `hidden sm:block z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-contain`,
   profileRight: `flex-1 hidden lg:flex`,
   details: `flex-1 `,
-  name: `text-lg`,
-  handle: `text-[#8899a6]`,
+  name: `text-lg truncate max-w-fit w-[6rem] font-bold`,
+  handle: `text-[#536371] dark:text-[#8899a6] max-w-fit w-[6rem] truncate`,
   moreContainer: `flex items-center  mr-2 ml-24 md:ml-12 `,
 };
 
@@ -47,7 +48,7 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
   return (
     <div className={style.wrapper}>
       <div className={style.twitterIconContainer}>
-        <VscTwitter />
+        <GiHummingbird size={"3rem"} />
       </div>
       <div className={style.navContainer}>
         <SidebarOption
@@ -178,7 +179,7 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
           <div className={style.details}>
             <div className={style.name}>{currentUser.name}</div>
             <div className={style.handle}>
-              @{`${currentAccount.slice(0, 4)}...${currentAccount.slice(-2)}`}
+              @{currentAccount}
             </div>
           </div>
           <div className={style.moreContainer}>

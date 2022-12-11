@@ -5,9 +5,16 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './app/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        // twitter : '#1DA1F2',
+        // twitterDark:'#1b8cd8',
+        // twitterLight:'#9acdf8',
+        twitter : '#3360ff',
+        twitterDark:'#5c79ff',
+        twitterLight:'#ccdeff',
         primaryBgl: 'var(--color-primary-light)',
         primaryBgd: 'var(--color-primary-dark)',
         primaryContrast: 'var(--color-primary-contrast)',
@@ -22,4 +29,5 @@ module.exports = {
     },
   },
   plugins: [],
+  
 }

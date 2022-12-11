@@ -11,14 +11,14 @@ const style = {
   wrapper: `mt-2 px-4 sm:flex flex-row border-b border-primaryContrast dark:border-primaryContrastDark pb-4`,
   tweetBoxLeft: `mr-4`,
   tweetBoxRight: `flex-1 `,
-  profileImage: `h-12 w-12 rounded-full`,
+  profileImage: `h-12 w-12 rounded-full object-cover`,
   inputField: `sm:mt-2 sm:pt-1 w-full h-auto outline-none bg-transparent text-xl resize-none placeholder:text-[#0f141999] dark:placeholder:text-[#8899a6]`,
   formLowerContainer: `flex mt-2`,
-  iconsContainer: `text-[#1d9bf0] flex flex-1 items-center`,
-  icon: `ml-2 mr-2 text-xl`,
+  iconsContainer: `text-twitter flex flex-1 items-center`,
+  icon: `ml-2 mr-2 text-xl `,
   submitGeneral: `px-6 py-2 rounded-3xl font-bold`,
-  inactiveSubmit: `bg-[#9acdf8] text-white dark:bg-[#196195] dark:text-[#95999e]`,
-  activeSubmit: `bg-[#1d9bf0] text-white dark:text-black`,
+  inactiveSubmit: `bg-twitterLight text-white dark:bg-twitterDark dark:text-[#95999e]`,
+  activeSubmit: `bg-twitter text-white dark:text-black`,
 };
 
 const TweetBox = () => {

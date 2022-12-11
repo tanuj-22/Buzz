@@ -4,19 +4,21 @@ import { FaRegComment, FaRetweet } from "react-icons/fa";
 import { FiShare } from "react-icons/fi";
 import { format } from "timeago.js";
 import { AiOutlineHeart } from "react-icons/ai";
-import {parseTwitterDate} from "../lib/utils";
+import { parseTwitterDate } from "../lib/utils";
 const style = {
-  wrapper: `flex p-3 border-b border-primaryContrast dark:border-primaryContrastDark `,
+  postMain: `flex-1 px-4 max-w-[90%]`,
+  headerDetails: `flex items-center flex-start `,
+  name: `font-bold mr-1 truncate w-[5rem] max-w-fit flex-[1]`,
+  verified: `text-[0.8rem] text-twitter dark:text-white`,
+  handle: `text-[#8899a6] text-sm ml-1 truncate max-w-[6rem] w-fit `,
+  timeAgo: `text-[#8899a6] text-sm ml-1 max-w-fit w-full `,
+  wrapper: `flex p-3 border-b border-primaryContrast dark:border-primaryContrastDark max-w-full`,
   profileImage: `rounded-full h-[40px] w-[40px] object-cover`,
-  postMain: `flex-1 px-4`,
-  headerDetails: `flex items-center`,
-  name: `font-bold mr-1`,
-  verified: `text-[0.8rem]`,
-  handleAndTimeAgo: `text-[#8899a6] ml-1`,
   tweet: `my-2`,
   image: `rounded-3xl`,
-  footer: `flex justify-between sm:px-8 mt-4 text-[#8899a6] mx-auto`,
+  footer: `flex justify-between sm:px-8 mt-4 text-[#536371] dark:text-[#8899a6] mx-auto`,
   footerIcon: `rounded-full text-lg p-2 cursor-pointer`,
+  avatarContainer: `flex-shrink-0`,
 };
 const Post = ({
   displayName,
@@ -28,7 +30,7 @@ const Post = ({
 }) => {
   return (
     <div className={style.wrapper}>
-      <div>
+      <div className={style.avatarContainer}>
         {avatar ? (
           <img
             src={avatar}
@@ -48,7 +50,7 @@ const Post = ({
         )}
       </div>
       <div className={style.postMain}>
-        <div>
+        <div >
           <span className={style.headerDetails}>
             <span className={style.name}>{displayName}</span>
             {isProfileImageNft && (
@@ -57,8 +59,9 @@ const Post = ({
               </span>
             )}
 
-            <span className={style.handleAndTimeAgo}>
-              @{userName} • {parseTwitterDate(timestamp)}
+            <span className={style.handle}>@{userName}</span>
+            <span className={style.timeAgo}>
+              • {parseTwitterDate(timestamp)}
             </span>
           </span>
           <div className={style.tweet}>{text}</div>

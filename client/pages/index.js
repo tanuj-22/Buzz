@@ -6,6 +6,7 @@ import { TwitterContext } from "../context/TwitterContext";
 import Image from "next/image";
 import metamaskLogo from "../assets/metamask.png";
 import errorLogo from "../assets/error.png";
+import Head from "next/head";
 
 const style = {
   // wrapper: `flex justify-center h-full 2xl:h-screen p-0  select-none bg-primaryBgl dark:bg-primaryBgd text-black dark:text-white  `,
@@ -55,7 +56,7 @@ export default function Home() {
       >
         Connect Wallet
       </div>
-      <div className={style.loginContent} >Connect to wallet </div>
+      <div className={style.loginContent}>Connect to wallet </div>
     </div>
   );
   const noMetamaskFound = (
@@ -92,10 +93,15 @@ export default function Home() {
   );
 
   return (
-    <div className={style.wrapper}>
-      {/* <div className={style.content}> */}
-      {app(appStatus)}
-      {/* </div> */}
+    <div className="bg-primaryBgl dark:bg-primaryBgd">
+      <Head>
+        <title>Buzz</title>
+      </Head>
+      <div className={style.wrapper}>
+        {/* <div className={style.content}> */}
+        {app(appStatus)}
+        {/* </div> */}
+      </div>
     </div>
   );
 }

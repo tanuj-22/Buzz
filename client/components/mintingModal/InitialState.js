@@ -23,7 +23,7 @@ const InitialState = ({
   setDescription,
   mint,
 }) => {
-  console.log("profileImage", profileImage);
+  
 
   return (
     <div className={style.wrapper}>

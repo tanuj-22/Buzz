@@ -8,11 +8,11 @@ const style = {
   inputBox: `bg-transparent outline-none`,
   section: `bg-secondaryBgl dark:bg-secondaryBgd my-6 rounded-xl overflow-hidden `,
   title: `p-4 font-bold text-lg`,
-  showMore: `p-4 text-[#1d9bf0] text-sm cursor-pointer hover:bg-secondaryHover dark:hover:bg-secondaryHoverDark`,
+  showMore: `p-4 text-twitter text-sm cursor-pointer hover:bg-secondaryHover dark:hover:bg-secondaryHoverDark`,
   item: `flex items-center p-3 my-2 hover:bg-secondaryHover dark:hover:bg-secondaryHoverDark cursor-pointer`,
   newsItemLeft: `flex-1`,
-  newsItemCategory: `text-[#8899a6] text-xs font-semibold`,
-  newsItemTitle: `text-sm font-bold`,
+  newsItemCategory: `text-[#8899a6] text-[0.8rem] `,
+  newsItemTitle: `text-[0.95rem] font-bold`,
   newsItemRight: `w-1/5 ml-3`,
   newsItemImage: `rounded-xl h-14 w-14 object-cover`,
   followAvatarContainer: `w-1/6`,
@@ -30,7 +30,7 @@ function Widgets() {
       <div className={style.searchBar}>
         <BiSearch className={style.searchIcon} />
         <input
-          placeholder="Search Twitter"
+          placeholder="Search Buzz"
           type="text"
           className={style.inputBox}
         />
