@@ -142,7 +142,7 @@ export const TwitterProvider = ({ children }) => {
         ).catch((err) => {
           console.log(err);
           resolve(
-            "https://pbs.twimg.com/profile_images/1461750463183962116/DvWy11QW_400x400.jpg"
+            "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
           );
         });
         if (
@@ -151,26 +151,30 @@ export const TwitterProvider = ({ children }) => {
           (pinataResponse && !pinataResponse.ok)
         ) {
           resolve(
-            "https://pbs.twimg.com/profile_images/1461750463183962116/DvWy11QW_400x400.jpg"
+            "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
           );
         }
 
-        if (pinataResponse) {
-          const pinataResponseJson = await pinataResponse.json();
-          if (pinataResponseJson.access === "public") {
-            resolve(`https://gateway.pinata.cloud/ipfs/${imageUri}`);
+        try {
+          if (pinataResponse) {
+            const pinataResponseJson = await pinataResponse.json();
+            if (pinataResponseJson.access === "public") {
+              resolve(`https://gateway.pinata.cloud/ipfs/${imageUri}`);
+            }
+            let imageurl = await decryptImage(pinataResponseJson.data);
+
+            resolve(imageurl);
           }
-          let imageurl = await decryptImage(pinataResponseJson.data);
-
-          resolve(imageurl);
+        } catch (error) {
+          console.log(error);
+          resolve(
+            "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
+          );
         }
-
-        resolve(
-          "https://pbs.twimg.com/profile_images/1414874230794031105/dL_AxaaQ_400x400.jpg"
-        );
 
         // return `https://gateway.pinata.cloud/ipfs/${imageUri}`;
       }
+      resolve(imageUri);
     });
   };
 

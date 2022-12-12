@@ -111,18 +111,23 @@ export const uploadAndEncryptImage = async (imagefile) => {
 };
 
 export const decryptImage = async (data) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     var enctext = Buffer.from(data);
-    var str = uintToString(enctext);
-    const decrypted = CryptoJS.AES.decrypt(str, key);
-    str = decrypted.toString(CryptoJS.enc.Utf8);
-    const wordArray = CryptoJS.enc.Hex.parse(str);
-    var BaText = wordArrayToByteArray(wordArray, wordArray.length);
 
-    var arrayBufferView = new Uint8Array(BaText);
+    try {
+      var str = uintToString(enctext);
+      const decrypted = CryptoJS.AES.decrypt(str, key);
+      str = decrypted.toString(CryptoJS.enc.Utf8);
+      const wordArray = CryptoJS.enc.Hex.parse(str);
+      var BaText = wordArrayToByteArray(wordArray, wordArray.length);
 
-    var blob = new Blob([arrayBufferView], { type: "image/jpg" });
-    const dataURL = await blobToDataURL(blob);
-    resolve(dataURL.toString());
+      var arrayBufferView = new Uint8Array(BaText);
+
+      var blob = new Blob([arrayBufferView], { type: "image/jpg" });
+      const dataURL = await blobToDataURL(blob);
+      resolve(dataURL.toString());
+    } catch (err) {
+      reject(new Error("Error decrypting image"));
+    }
   });
 };
