@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { client } from "../lib/client";
+import { decryptImage } from "../lib/utility/encryption";
 export const TwitterContext = createContext();
 
 export const TwitterProvider = ({ children }) => {
@@ -20,6 +21,14 @@ export const TwitterProvider = ({ children }) => {
     getCurrentUserDetails(currentAccount);
     fetchTweets();
   }, [currentAccount, appStatus]);
+
+  if (typeof window != "undefined" && window.ethereum) {
+    window.ethereum.on("accountsChanged", (accounts) => {
+      setCurrentAccount(accounts[0]);
+      setAppStatus("connected");
+      router.push("/");
+    });
+  }
 
   useEffect(() => {
     if (!currentAccount || appStatus !== "connected" || tweets === []) return;
@@ -120,11 +129,49 @@ export const TwitterProvider = ({ children }) => {
   };
 
   const getProfileImageUrl = async (imageUri, isNft) => {
-    if (isNft) {
-      return `https://gateway.pinata.cloud/ipfs/${imageUri}`;
-    } else {
-      return imageUri;
-    }
+    return new Promise(async (resolve, reject) => {
+      if (isNft) {
+        const pinataResponse = await fetch(
+          "https://gateway.pinata.cloud/ipfs/" + imageUri,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        ).catch((err) => {
+          console.log(err);
+          resolve(
+            "https://pbs.twimg.com/profile_images/1461750463183962116/DvWy11QW_400x400.jpg"
+          );
+        });
+        if (
+          pinataResponse == undefined ||
+          pinataResponse == null ||
+          (pinataResponse && !pinataResponse.ok)
+        ) {
+          resolve(
+            "https://pbs.twimg.com/profile_images/1461750463183962116/DvWy11QW_400x400.jpg"
+          );
+        }
+
+        if (pinataResponse) {
+          const pinataResponseJson = await pinataResponse.json();
+          if (pinataResponseJson.access === "public") {
+            resolve(`https://gateway.pinata.cloud/ipfs/${imageUri}`);
+          }
+          let imageurl = await decryptImage(pinataResponseJson.data);
+
+          resolve(imageurl);
+        }
+
+        resolve(
+          "https://pbs.twimg.com/profile_images/1414874230794031105/dL_AxaaQ_400x400.jpg"
+        );
+
+        // return `https://gateway.pinata.cloud/ipfs/${imageUri}`;
+      }
+    });
   };
 
   const fetchTweets = async (options = {}) => {
@@ -140,7 +187,9 @@ export const TwitterProvider = ({ children }) => {
         : new Date(0).toISOString(),
     };
     const sanityResponse = await client.fetch(query, param);
-    
+    if (param.timestampBefore === new Date(0).toISOString()) {
+      setTweets([]);
+    }
     sanityResponse.forEach(async (items) => {
       const ProfileImageUrl = await getProfileImageUrl(
         items.author.profileImage,
@@ -160,7 +209,6 @@ export const TwitterProvider = ({ children }) => {
       };
       setTweets((prev) => [newItem, ...prev]);
     });
-
   };
 
   const getUserData = async (userWalletAddress) => {
@@ -202,7 +250,10 @@ export const TwitterProvider = ({ children }) => {
     `;
 
     const sanityResponse = await client.fetch(query);
-
+    if (sanityResponse.length === 0) {
+      router.push("/");
+      return;
+    }
     const ProfileImageUrl = await getProfileImageUrl(
       sanityResponse[0].profileImage,
       sanityResponse[0].isProfileImageNft
@@ -247,7 +298,7 @@ export const TwitterProvider = ({ children }) => {
         },
       ])
       .commit();
-      await getCurrentUserDetails();
+    await getCurrentUserDetails();
 
     // await fetchTweets();
   };

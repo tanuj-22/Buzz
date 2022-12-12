@@ -7,6 +7,7 @@ export const pinJSONToIPFS = async (json) => {
   return axios
     .post(url, json, {
       headers: {
+        "Content-Type": "application/json",
         pinata_api_key: key,
         pinata_secret_api_key: secret,
       },
@@ -16,6 +17,7 @@ export const pinJSONToIPFS = async (json) => {
     })
     .catch(function (error) {
       console.log(error);
+      return "error";
     });
 };
 
@@ -42,4 +44,15 @@ export const pinFileToIPFS = async (file, pinataMetaData) => {
     .catch(function (error) {
       console.log(error);
     });
+};
+
+function makeFileObjects(data) {
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+
+  return new File([blob], "nftdata.json");
+}
+
+export const pinJSONToIPFS2 = async (json, pinataMetaData) => {
+  const file = makeFileObjects(json);
+  return pinFileToIPFS(file, pinataMetaData);
 };

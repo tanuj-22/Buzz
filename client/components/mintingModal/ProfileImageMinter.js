@@ -4,10 +4,11 @@ import LoadingState from "./LoadingState";
 import FinishedState from "./FinishedState";
 import { useRouter } from "next/router";
 import { TwitterContext } from "../../context/TwitterContext";
-import { pinJSONToIPFS, pinFileToIPFS } from "../../lib/pinata";
+import { pinJSONToIPFS, pinFileToIPFS, pinJSONToIPFS2 } from "../../lib/pinata";
 import { client } from "../../lib/client";
 import { ethers } from "ethers";
 import { contractAddress, contractABI } from "../../lib/constants";
+import { uploadAndEncryptImage } from "../../lib/utility/encryption";
 
 let metamask;
 if (typeof window !== "undefined") {
@@ -38,18 +39,33 @@ const ProfileImageMinter = () => {
 
   const mint = async () => {
     if (!name || !description || !profileImage) return;
+
     setStatus("loading");
 
-    const pinataMetadata = {
-      name: `${name} - ${description}`,
+    const encrptedImageText = await uploadAndEncryptImage(profileImage);
+    const encryptedMetadata = {
+      name: name,
+      description: description,
+      data: encrptedImageText.toString(),
+      access: "secured",
     };
-
-    const ipfsImageHash = await pinFileToIPFS(profileImage, pinataMetadata);
-    await client
-      .patch(currentAccount)
-      .set({ profileImage: ipfsImageHash })
-      .set({ isProfileImageNft: true })
-      .commit();
+    const pinataMetadata = {
+      name: name,
+      description: description,
+      access: "secured",
+    };
+    const ipfsImageHash = await pinJSONToIPFS2(
+      encryptedMetadata,
+      pinataMetadata
+    );
+    if (
+      ipfsImageHash === "error" ||
+      ipfsImageHash === undefined ||
+      ipfsImageHash === null
+    ) {
+      setStatus("error");
+      return;
+    }
 
     const imageMetadata = {
       name: name,
@@ -58,6 +74,83 @@ const ProfileImageMinter = () => {
     };
 
     const ipfsJsonHash = await pinJSONToIPFS(imageMetadata);
+
+    if (
+      ipfsJsonHash === "error" ||
+      ipfsJsonHash === undefined ||
+      ipfsJsonHash === null
+    ) {
+      setStatus("error");
+      return;
+    }
+    if (ipfsImageHash && ipfsImageHash !== "error")
+      await client
+        .patch(currentAccount)
+        .set({ profileImage: ipfsImageHash })
+        .set({ isProfileImageNft: true })
+        .commit();
+    const contract = await getEthereumContract();
+
+    const trasactionParameters = {
+      to: contractAddress,
+      from: currentAccount,
+      data: await contract.mint(currentAccount, `ipfs://${ipfsJsonHash}`),
+    };
+
+    try {
+      await metamask.request({
+        method: "eth_sendTransaction",
+        params: [trasactionParameters],
+      });
+
+      setStatus("finished");
+    } catch (err) {
+      console.log(err);
+      setStatus("finished");
+    }
+  };
+
+  const mintPublic = async () => {
+    if (!name || !description || !profileImage) return;
+    setStatus("loading");
+
+    const pinataMetadata = {
+      name: `${name}`,
+      description: description,
+      access: "public",
+    };
+
+    const ipfsImageHash = await pinFileToIPFS(profileImage, pinataMetadata);
+    if (
+      ipfsImageHash === "error" ||
+      ipfsImageHash === undefined ||
+      ipfsImageHash === null
+    ) {
+      setStatus("error");
+      return;
+    }
+
+    const imageMetadata = {
+      name: name,
+      description: description,
+      image: `ipfs://${ipfsImageHash}`,
+    };
+    await client
+      .patch(currentAccount)
+      .set({ profileImage: ipfsImageHash })
+      .set({ isProfileImageNft: true })
+      .commit();
+
+    const ipfsJsonHash = await pinJSONToIPFS(imageMetadata);
+
+    if (
+      ipfsJsonHash === "error" ||
+      ipfsJsonHash === undefined ||
+      ipfsJsonHash === null
+    ) {
+      setStatus("error");
+      return;
+    }
 
     const contract = await getEthereumContract();
 
