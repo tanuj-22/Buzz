@@ -18,7 +18,9 @@ const style = {
 function Feed() {
   const { tweets, fetchTweets } = useContext(TwitterContext);
   const { theme, setTheme } = useTheme();
+  
 
+  
   return (
     <div className={`${style.wrapper}`}>
       <div className={style.header}>

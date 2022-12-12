@@ -12,9 +12,10 @@ export const customStyles = {
     transform: "translate(-50%, -50%)",
     backgroundColor: "",
     border: "none",
+
   },
   overlay: {
     backgroundColor: "#334250a7",
-
+    zIndex: 1000,
   }
 };

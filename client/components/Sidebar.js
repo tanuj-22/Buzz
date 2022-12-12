@@ -33,7 +33,7 @@ const style = {
   profileButton: `sticky sm:border-0 pb-3 p-4 items-start sm:static sm:flex sm:items-center sm:mb-6 cursor-pointer hover:bg-primaryHover dark:hover:bg-primaryHoverDark sm:rounded-[100px] sm:p-2 lg:w-max`,
   profileLeft: `  sm:flex sm:item-center sm:justify-center lg:mr-4`,
   profileImage: `z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-cover`,
-  profileImageProfile: `hidden sm:block z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-contain`,
+  profileImageProfile: `hidden sm:block z-40 h-8 w-8 sm:static sm:h-12 sm:w-12 rounded-full object-cover`,
   profileRight: `flex-1 hidden lg:flex`,
   details: `flex-1 `,
   name: `text-lg truncate max-w-fit w-[6rem] font-bold`,

@@ -15,10 +15,10 @@ const style = {
   profileImage: `object-cover rounded-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd  h-full`,
   nftImageContainer: `object-cover h-full w-12 h-12 bg-primaryBgl dark:bg-primaryBgd`,
   profileImageNft: `object-cover h-[8rem] w-[8rem] h-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd`,
-  profileImageMint: `bg-white text-black px-3 py-1 rounded-full hover:bg-[#8899a6] cursor-pointer`,
+  profileImageMint: `relative top-[1.8rem] font-bold text-[0.9rem] bg-primaryBgl dark:bg-primaryBgd text-black dark:text-white px-4 py-2 rounded-full hover:bg-primaryHover dark:hover:bg-primaryHoverDark cursor-pointer outline outline-offset-0 outline-[1px] outline-primaryContrast dark:outline-primaryContrastDark`,
   details: `px-3`,
-  nav: `flex justify-around mt-4 mb-2 text-xs font-semibold text-[#8899a6]`,
-  activeNav: `text-black dark:text-white`,
+  nav: `flex justify-around mt-4 mb-2 text-[0.9rem] tracking-tight pb-2 font-semibold text-[#8899a6]`,
+  activeNav: `text-black dark:text-white underline underline-offset-[1.2rem] decoration-twitter decoration-[0.2rem]`,
 };
 
 const ProfileHeader = () => {
@@ -91,6 +91,9 @@ const ProfileHeader = () => {
                 className={style.profileImage}
               />
             )}
+            <div className={style.editButton}>
+              <div className={style.profileImageMint}>Edit profile</div>
+            </div>
           </div>
         ) : (
           <>
