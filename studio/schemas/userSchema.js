@@ -27,7 +27,11 @@ export const userSchema = {
       name: "username",
       title: "Username",
       type: "slug",
-      
+    },
+    {
+      name: "email",
+      title: "Email",
+      type: "slug",
     },
     {
       name: "profileImage",
