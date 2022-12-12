@@ -14,6 +14,22 @@ export const userSchema = {
       type: "string",
     },
     {
+      name: "bio",
+      title: "Bio",
+      type: "string",
+    },
+    {
+      name: "location",
+      title: "Location",
+      type: "string",
+    },
+    {
+      name: "username",
+      title: "Username",
+      type: "slug",
+      
+    },
+    {
       name: "profileImage",
       title: "Profile Image",
       type: "string",
