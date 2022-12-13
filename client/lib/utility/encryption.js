@@ -72,7 +72,7 @@ function callEncrypt(argument) {
   return ctstr;
 }
 
-const compressImage = async (file) => {
+export const compressImage = async (file) => {
   return new Promise(async (resolve, reject) => {
     const imageFile = file;
     const options = {

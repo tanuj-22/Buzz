@@ -33,5 +33,5 @@ implement new tweets button when scroll
 search
 ui revamp
 update contract
-profileimageurl
 individual tweet counters
+change dependency of walletAddress

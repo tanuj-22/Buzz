@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { client } from "../lib/client";
-import { decryptImage } from "../lib/utility/encryption";
+import { compressImage, decryptImage } from "../lib/utility/encryption";
 export const TwitterContext = createContext();
 
 export const TwitterProvider = ({ children }) => {
@@ -9,6 +9,7 @@ export const TwitterProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [tweets, setTweets] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
+  const [currentID, setCurrentID] = useState("");
 
   const router = useRouter();
 
@@ -34,6 +35,7 @@ export const TwitterProvider = ({ children }) => {
     if (!currentAccount || appStatus !== "connected" || tweets === []) return;
     //change useEffect to listen for updates dependency array and tweets if
     // console.log("listening for updates");
+
     const listenerQuery = ` *[ _type == "tweets"  && author._ref != $currentAccount ]`;
     const params = { currentAccount: currentAccount };
     // pending update based on newTweetCount
@@ -54,29 +56,29 @@ export const TwitterProvider = ({ children }) => {
     };
   }, [tweets]);
 
-  const checkIfWalletIsConnected = async () => {
-    if (!window.ethereum) {
-      console.log("Make sure you have metamask!");
-      return setAppStatus("noMetamask");
-    }
-    try {
-      const addressArray = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-      if (addressArray.length > 0) {
-        setCurrentAccount(addressArray[0]);
-        createUserAccount(addressArray[0]);
+  // const checkIfWalletIsConnected = async () => {
+  //   if (!window.ethereum) {
+  //     console.log("Make sure you have metamask!");
+  //     return setAppStatus("noMetamask");
+  //   }
+  //   try {
+  //     const addressArray = await window.ethereum.request({
+  //       method: "eth_accounts",
+  //     });
+  //     if (addressArray.length > 0) {
+  //       setCurrentAccount(addressArray[0]);
+  //       createUserAccount(addressArray[0]);
 
-        setAppStatus("connected");
-      } else {
-        // router.push("/");
-        setAppStatus("notConnected");
-        router.push("/");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //       setAppStatus("connected");
+  //     } else {
+  //       // router.push("/");
+  //       setAppStatus("notConnected");
+  //       router.push("/");
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const connectToWallet = async () => {
     if (!window.ethereum) {
@@ -91,7 +93,7 @@ export const TwitterProvider = ({ children }) => {
       });
       if (addressArray.length > 0) {
         setCurrentAccount(addressArray[0]);
-        createUserAccount(addressArray[0]);
+        // createUserAccount(addressArray[0]);
         setAppStatus("connected");
       } else {
         // router.push("/");
@@ -104,29 +106,29 @@ export const TwitterProvider = ({ children }) => {
     }
   };
 
-  const createUserAccount = async (userWalletAddress = currentAccount) => {
-    if (!window.ethereum) {
-      console.log("Get metamask!");
-      return setAppStatus("noMetamask");
-    }
-    try {
-      const userDoc = {
-        _type: "users",
-        name: "Unnamed",
-        _id: userWalletAddress,
-        isProfileImageNft: false,
-        profileImage:
-          "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png",
-        walletAddress: userWalletAddress,
-      };
-      await client.createIfNotExists(userDoc);
-      setAppStatus("connected");
-    } catch (err) {
-      console.log(err);
-      setAppStatus("error");
-      router.push("/");
-    }
-  };
+  // const createUserAccount = async (userWalletAddress = currentAccount) => {
+  //   if (!window.ethereum) {
+  //     console.log("Get metamask!");
+  //     return setAppStatus("noMetamask");
+  //   }
+  //   try {
+  //     const userDoc = {
+  //       _type: "users",
+  //       name: "Unnamed",
+  //       _id: userWalletAddress,
+  //       isProfileImageNft: false,
+  //       profileImage:
+  //         "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png",
+  //       walletAddress: userWalletAddress,
+  //     };
+  //     await client.createIfNotExists(userDoc);
+  //     setAppStatus("connected");
+  //   } catch (err) {
+  //     console.log(err);
+  //     setAppStatus("error");
+  //     router.push("/");
+  //   }
+  // };
 
   const getProfileImageUrl = async (imageUri, isNft) => {
     return new Promise(async (resolve, reject) => {
@@ -266,7 +268,8 @@ export const TwitterProvider = ({ children }) => {
 
     const sanityResponse = await client.fetch(query);
     if (sanityResponse.length === 0) {
-      router.push("/");
+      router.push("/?createProfile=true");
+      setAppStatus("notConnected");
       return;
     }
     const ProfileImageUrl = await getProfileImageUrl(
@@ -333,28 +336,162 @@ export const TwitterProvider = ({ children }) => {
   };
 
   const updateProfile = async (profileDoc) => {
+    if (profileDoc === undefined || profileDoc === null || profileDoc === {}) {
+      alert("Please fill all the fields");
+      return;
+    }
     const fieldUpdates = {};
     for (let key in profileDoc) {
       let value = profileDoc[key];
       if (value !== currentUser[key]) {
         if (key === "profileImage" || key === "coverImage") {
-          const url = new URL(value);
-          const imageUri = url.pathname.split("/").pop();
           var blob = await fetch(value).then((r) => r.blob());
-          const file = new File([blob], blob.name, { type: blob.type });
-          const asset = await uploadAsset(file);
+          const file = new File([blob], currentUser.name, { type: blob.type });
+          const compressedFile = await compressImage(file);
+          const asset = await uploadAsset(compressedFile);
           value = asset.url;
         }
         fieldUpdates[key] = value;
       }
     }
-    
-    if(fieldUpdates === {}){
+
+    if (fieldUpdates === {}) {
       router.push("/profile");
     }
     await client.patch(currentUser._id).set(fieldUpdates).commit();
     await getCurrentUserDetails();
     router.push("/profile");
+  };
+  const checkUniqueUsername = async (username) => {
+    const query = `
+    *[_type == "users" && username == "${username}"]{
+      username
+    }
+    `;
+
+    const sanityResponse = await client.fetch(query);
+    if (sanityResponse.length === 0) {
+      return true;
+    }
+    return false;
+  };
+  const createUserProfile = async (profileDoc) => {
+    if (profileDoc === undefined || profileDoc === null || profileDoc === {}) {
+      alert("Please fill all the fields");
+      return;
+    }
+    if (
+      profileDoc.username === undefined ||
+      profileDoc.username === null ||
+      profileDoc.username === ""
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+    setAppStatus("loading");
+    const fieldUpdates = {};
+    for (let key in profileDoc) {
+      let value = profileDoc[key];
+      if (key === "profileImage" || key === "coverImage") {
+        var blob = await fetch(value).then((r) => r.blob());
+        const file = new File([blob], blob.name, { type: blob.type });
+        const compressedFile = await compressImage(file);
+        const asset = await uploadAsset(compressedFile);
+        value = asset.url;
+      } else if (key === "username") {
+        const isUnique = await checkUniqueUsername(value);
+        if (!isUnique) {
+          alert("Username is already taken");
+          setAppStatus("notConnected");
+          return;
+        }
+      }
+      fieldUpdates[key] = value;
+    }
+    await connectWalletAfterSignUp(fieldUpdates);
+  };
+
+  const connectWalletAfterSignUp = async (profileDoc) => {
+    if (!window.ethereum) {
+      console.log("Get metamask!");
+      return setAppStatus("noMetamask");
+    }
+    try {
+      setAppStatus("loading");
+
+      const addressArray = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      if (addressArray.length > 0) {
+        let newUserDetails = {};
+        newUserDetails = {
+          ...profileDoc,
+          walletAddress: addressArray[0],
+        };
+        // console.log(newUserDetails);
+        await createUserAccountProfile(newUserDetails);
+      } else {
+        // router.push("/");
+        setAppStatus("notConnected");
+        router.push("/");
+      }
+    } catch (err) {
+      setAppStatus("error");
+      console.log(err);
+    }
+  };
+
+  const createUserAccountProfile = async (profileDoc) => {
+    try {
+      const userDoc = {
+        _type: "users",
+        name:
+          profileDoc.name && profileDoc.name !== ""
+            ? profileDoc.name
+            : "Unnamed",
+        // _id: userWalletAddress,
+        isProfileImageNft: false,
+        profileImage: profileDoc.profileImage
+          ? profileDoc.profileImage
+          : "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png",
+        location: profileDoc.location ? profileDoc.location : "",
+        bio: profileDoc.bio ? profileDoc.bio : "",
+        username: profileDoc.username ? profileDoc.username : "",
+        coverImage: profileDoc.coverImage ? profileDoc.coverImage : "",
+        walletAddress: profileDoc.walletAddress ? profileDoc.walletAddress : "",
+        _id: profileDoc.walletAddress ? profileDoc.walletAddress : "user.",
+      };
+
+      await client.create(userDoc);
+      setCurrentAccount(profileDoc.walletAddress);
+      setAppStatus("connected");
+    } catch (err) {
+      console.log(err);
+      setAppStatus("error");
+      router.push("/");
+    }
+  };
+
+  const checkIfWalletIsConnected = async () => {
+    if (!window.ethereum) {
+      console.log("Make sure you have metamask!");
+      return setAppStatus("noMetamask");
+    }
+    try {
+      const addressArray = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+      if (addressArray.length > 0) {
+        setCurrentAccount(addressArray[0]);
+        setAppStatus("connected");
+      } else {
+        // router.push("/");
+        setAppStatus("notConnected");
+        router.push("/");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -370,6 +507,7 @@ export const TwitterProvider = ({ children }) => {
         currentUser,
         doTweet,
         updateProfile,
+        createUserProfile,
       }}
     >
       {children}
