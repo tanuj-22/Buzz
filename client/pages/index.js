@@ -7,7 +7,6 @@ import Image from "next/image";
 import metamaskLogo from "../assets/metamask.png";
 import errorLogo from "../assets/error.png";
 import Head from "next/head";
-import { useTheme } from "next-themes";
 import { useEffect } from "react";
 const style = {
   // wrapper: `flex justify-center h-full 2xl:h-screen p-0  select-none bg-primaryBgl dark:bg-primaryBgd text-black dark:text-white  `,
@@ -20,12 +19,7 @@ const style = {
 
 export default function Home() {
   const { appStatus, connectToWallet } = useContext(TwitterContext);
-  const { systemTheme, setTheme } = useTheme();
-
-  useEffect(() => {
-    if (systemTheme === "dark") setTheme("dark");
-    else setTheme("light");
-  }, [systemTheme]);
+  
 
   const app = (status = appStatus) => {
     switch (status) {

@@ -22,7 +22,7 @@ const FinishedState = () => {
     <div className={style.wrapper}>
       <div className={style.title}>Minting Successful!</div>
       <Image src={checkMark} alt="checkmark" height={100} width={100} />
-      <div onClick={() => router.push("/")} className={style.closeButton}>
+      <div onClick={() => router.back()} className={style.closeButton}>
         Close
       </div>
     </div>

@@ -34,7 +34,7 @@ const Post = ({
         {avatar ? (
           <img
             src={avatar}
-            alt={userName}
+            alt={displayName}
             className={
               isProfileImageNft
                 ? `${style.profileImage} smallHex`

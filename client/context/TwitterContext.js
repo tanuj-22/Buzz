@@ -173,8 +173,13 @@ export const TwitterProvider = ({ children }) => {
         }
 
         // return `https://gateway.pinata.cloud/ipfs/${imageUri}`;
+      } else {
+        resolve(imageUri);
       }
-      resolve(imageUri);
+      // resolve(imageUri);
+      resolve(
+        "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
+      );
     });
   };
 
@@ -244,12 +249,18 @@ export const TwitterProvider = ({ children }) => {
     }
     const query = `
     *[_type == "users" && _id == "${currentAccount}"]{
-      "tweets" : tweets[]->{timestamp, tweet}| order(timestamp desc),
+      "tweets" : tweets[]->{timestamp, tweet,_id}| order(timestamp desc),
       name,
       profileImage,
       isProfileImageNft,
       coverImage,
-      walletAddress
+      walletAddress,
+      username,
+      email,
+      bio,
+      location,
+      _id
+
     }
     `;
 
@@ -270,6 +281,11 @@ export const TwitterProvider = ({ children }) => {
       coverImage: sanityResponse[0].coverImage,
       walletAddress: sanityResponse[0].walletAddress,
       tweets: sanityResponse[0].tweets,
+      username: sanityResponse[0].username,
+      email: sanityResponse[0].email,
+      bio: sanityResponse[0].bio,
+      location: sanityResponse[0].location,
+      _id: sanityResponse[0]._id,
     });
   };
 
@@ -307,6 +323,40 @@ export const TwitterProvider = ({ children }) => {
     // await fetchTweets();
   };
 
+  const uploadAsset = async (file) => {
+    const res = await client.assets.upload("image", file, {
+      contentType: file.type,
+      filename: file.name,
+    });
+
+    return res;
+  };
+
+  const updateProfile = async (profileDoc) => {
+    const fieldUpdates = {};
+    for (let key in profileDoc) {
+      let value = profileDoc[key];
+      if (value !== currentUser[key]) {
+        if (key === "profileImage" || key === "coverImage") {
+          const url = new URL(value);
+          const imageUri = url.pathname.split("/").pop();
+          var blob = await fetch(value).then((r) => r.blob());
+          const file = new File([blob], blob.name, { type: blob.type });
+          const asset = await uploadAsset(file);
+          value = asset.url;
+        }
+        fieldUpdates[key] = value;
+      }
+    }
+    
+    if(fieldUpdates === {}){
+      router.push("/profile");
+    }
+    await client.patch(currentUser._id).set(fieldUpdates).commit();
+    await getCurrentUserDetails();
+    router.push("/profile");
+  };
+
   return (
     <TwitterContext.Provider
       value={{
@@ -319,6 +369,7 @@ export const TwitterProvider = ({ children }) => {
         getCurrentUserDetails,
         currentUser,
         doTweet,
+        updateProfile,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VscTwitter } from "react-icons/vsc";
-import {GiHummingbird} from "react-icons/gi";
+import { GiHummingbird } from "react-icons/gi";
 import SidebarOption from "./SidebarOption";
 import { RiHome7Line, RiHome7Fill, RiFileList2Fill } from "react-icons/ri";
 import Link from "next/link";
@@ -21,7 +21,8 @@ import {
 } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { customStyles } from "../lib/constants";
-
+import ProfileEdit from "./profile/ProfileEdit";
+import { useTheme } from "next-themes";
 const style = {
   // wrapper: `hidden sm:flex flex-[0.7] px-8 flex-col h-full fixed`,
   wrapper: `fixed z-40 sm:flex sm:flex-[0.7] sm:flex-col sm:h-full items-center xl:items-start lg:w-[15%] sm:p-2 lg:ml-12`,
@@ -44,6 +45,12 @@ const style = {
 function Sidebar({ initialSelectedIcon = "Home" }) {
   const [selected, setSelected] = useState(initialSelectedIcon);
   const router = useRouter();
+  const { systemTheme, setTheme } = useTheme();
+
+  useEffect(() => {
+    if (systemTheme === "dark") setTheme("dark");
+    else setTheme("light");
+  }, [systemTheme]);
   const { currentUser, currentAccount } = useContext(TwitterContext);
   return (
     <div className={style.wrapper}>
@@ -101,7 +108,7 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
 
         <div
           onClick={() =>
-            router.push(`${router.pathname}/?mint=${currentAccount}`)
+            router.push(`${router.pathname}?mint=${currentAccount}`)
           }
           className={style.tweetButton}
         >
@@ -138,7 +145,7 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
         />
         <div
           onClick={() =>
-            router.push(`${router.pathname}/?mint=${currentAccount}`)
+            router.push(`${router.pathname}?mint=${currentAccount}`)
           }
           className={style.tweetButtonMobile}
         >
@@ -178,9 +185,7 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
         <div className={style.profileRight}>
           <div className={style.details}>
             <div className={style.name}>{currentUser.name}</div>
-            <div className={style.handle}>
-              @{currentAccount}
-            </div>
+            <div className={style.handle}>@{currentAccount}</div>
           </div>
           <div className={style.moreContainer}>
             <FiMoreHorizontal />
@@ -193,6 +198,12 @@ function Sidebar({ initialSelectedIcon = "Home" }) {
         style={customStyles}
       >
         <ProfileImageMinter />
+      </Modal>
+      <Modal
+        isOpen={Boolean(router.query.editProfile)}
+        style={customStyles}
+      >
+        <ProfileEdit />
       </Modal>
     </div>
   );

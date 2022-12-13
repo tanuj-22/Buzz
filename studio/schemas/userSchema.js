@@ -26,12 +26,13 @@ export const userSchema = {
     {
       name: "username",
       title: "Username",
-      type: "slug",
+      type: "string",
     },
     {
       name: "email",
       title: "Email",
-      type: "slug",
+      type: "string",
+      
     },
     {
       name: "profileImage",
