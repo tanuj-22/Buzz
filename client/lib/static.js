@@ -25,6 +25,12 @@ export const news = [
 
 export const whoToFollow = [
   {
+    name: "Tanuj Pancholi",
+    handle: "@imTanujP",
+    avatar:
+      "https://pbs.twimg.com/profile_images/1582297785134551041/NupBdgtM_400x400.jpg",
+  },
+  {
     name: "Striver",
     handle: "@striver_79",
     avatar:

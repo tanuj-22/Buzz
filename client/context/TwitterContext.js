@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { client } from "../lib/client";
 import { compressImage, decryptImage } from "../lib/utility/encryption";
 export const TwitterContext = createContext();
+import { useTrends } from "../components/useTrends";
 
 export const TwitterProvider = ({ children }) => {
   const [appStatus, setAppStatus] = useState("loading");
@@ -12,6 +13,7 @@ export const TwitterProvider = ({ children }) => {
   const [currentID, setCurrentID] = useState("");
 
   const router = useRouter();
+  const trends = useTrends();
 
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -508,6 +510,7 @@ export const TwitterProvider = ({ children }) => {
         doTweet,
         updateProfile,
         createUserProfile,
+        trends
       }}
     >
       {children}

@@ -27,7 +27,7 @@ const style = {
   // wrapper: `hidden sm:flex flex-[0.7] px-8 flex-col h-full fixed`,
   wrapper: `fixed z-40 sm:flex sm:flex-[0.7] sm:flex-col sm:h-full items-center xl:items-start lg:w-[15%] sm:p-2 lg:ml-12`,
   twitterIconContainer: `text-twitter dark:text-white hidden sm:inline text-3xl m-4 items-start`,
-  tweetButton: `text-white  flex flex-col bg-twitter hover:bg-twitterDark items-center justify-center font-bold rounded-3xl h-[50px] mt-[20px] cursor-pointer`,
+  tweetButton: `text-white  flex flex-col bg-twitter hover:bg-twitterDark items-center justify-center font-bold rounded-3xl h-[50px] mt-[20px] cursor-pointer sm:mx-4 lg-w-full`,
   tweetButtonMobile: `text-white w-20 bg-twitter flex flex-col justify-center text-center align-center hover:bg-twitterDark font-bold rounded-2xl h-[40px] mr-4 mt-2 cursor-pointer`,
   navContainer: `hidden sm:inline sm:flex-1 w-full`,
   mobNavContainer: `z-60 fixed bottom-0 flex flex-grow bg-primaryBgl dark:bg-primaryBgd border-t border-primaryContrast dark:border-primaryContrastDark w-full flex-row sm:hidden`,

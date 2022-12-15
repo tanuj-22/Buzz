@@ -1,21 +1,21 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { TwitterContext } from "../../context/TwitterContext";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { useRouter } from "next/router";
-import { CiLocationOn } from "react-icons/ci";
 
+import { MdOutlineLocationOn } from "react-icons/md";
 const style = {
   wrapper: `border-primaryContrast dark:border-primaryContrastDark border-b`,
   header: `py-1 px-3 mt-2 flex items-center`,
   Detailsprimary: `bg-transparent outline-none font-bold text-md`,
-  Detailssecondary : `text-twitterContrastDark text-[0.75rem]`,
+  Detailssecondary: `text-twitterContrastDark text-[0.75rem]`,
   primary: `bg-transparent outline-none font-bold text-3xl`,
   secondary: `text-twitterContrastDark text-[0.95rem]`,
   backButton: `text-3xl cursor-pointer mr-2 rounded-full hover:bg-primaryHover dark:hover:bg-primaryHoverDark p-1 z-50`,
-  coverPhotoContainer: `flex items-center justify-center aspect-[3/1] overflow-hidden`,
-  coverPhoto: `object-cover h-full w-full`,
-  profileImageContainer: `aspect-square w-full h-[8rem] rounded-full mt-[-4rem] mb-2 flex justify-start items-center px-3 flex justify-between`,
-  profileImage: `aspect-square object-cover rounded-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd  h-full`,
+  coverPhotoContainer: `z-[-1] flex items-center justify-center aspect-[3/1] overflow-hidden`,
+  coverPhoto: `z-0 object-cover h-full w-full`,
+  profileImageContainer: `relative z-100 aspect-square w-full h-[8rem] rounded-full mt-[-4rem] mb-2 flex justify-start items-center px-3 flex justify-between`,
+  profileImage: `z-100 aspect-square object-cover rounded-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd  h-full`,
   nftImageContainer: `object-cover h-full w-12 h-12 bg-primaryBgl dark:bg-primaryBgd`,
   profileImageNft: `rounded-full object-cover h-[8rem] w-[8rem] h-full outline outline-offset-0 outline-[5px] outline-primaryBgl dark:outline-primaryBgd`,
   profileImageMint: `relative top-[1.8rem] font-bold text-[0.9rem] bg-primaryBgl dark:bg-primaryBgd text-black dark:text-white px-4 py-2 rounded-full hover:bg-primaryHover dark:hover:bg-primaryHoverDark cursor-pointer outline outline-offset-0 outline-[1px] outline-primaryContrast dark:outline-primaryContrastDark`,
@@ -24,6 +24,7 @@ const style = {
   activeNav: `text-black dark:text-white underline underline-offset-[1.2rem] decoration-twitter decoration-[0.2rem]`,
   bio: `text-[1rem] bg-primaryBgl dark:bg-primaryBgd mt-2 `,
   location: `text-[0.975rem] flex items-center text-twitterContrastDark max-w-fit gap-1`,
+  locationIcon: `text-md `,
 };
 
 const ProfileHeader = () => {
@@ -79,7 +80,9 @@ const ProfileHeader = () => {
             }}
           />
         ) : (
-          <div className={`${style.coverPhoto} animate-loading h-[200px] bg-slate-500`}></div>
+          <div
+            className={`${style.coverPhoto} h-[200px] animate-loading bg-slate-500`}
+          ></div>
         )}
       </div>
       <div>
@@ -115,7 +118,7 @@ const ProfileHeader = () => {
           <>
             <div className={style.profileImageContainer}>
               <div
-                className={`${style.profileImage} animate-loading h-[128px] w-[128px] bg-slate-500`}
+                className={`${style.profileImage} h-[128px] w-[128px] animate-loading bg-slate-500`}
               ></div>
             </div>
           </>
@@ -134,7 +137,8 @@ const ProfileHeader = () => {
         </div>
         <div className={style.bio}>{userData.bio}</div>
         <div className={style.location}>
-          <CiLocationOn className={style.locationIcon} />
+          <MdOutlineLocationOn className={style.locationIcon} />
+          
           <span className={style.location}>{userData.location}</span>
         </div>
       </div>
