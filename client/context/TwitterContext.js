@@ -4,7 +4,7 @@ import { client } from "../lib/client";
 import { compressImage, decryptImage } from "../lib/utility/encryption";
 export const TwitterContext = createContext();
 import { useTrends } from "../components/useTrends";
-import { actionOnTweet } from "./functions/tweetsUtility";
+
 
 export const TwitterProvider = ({ children }) => {
   const [appStatus, setAppStatus] = useState("loading");
@@ -148,7 +148,7 @@ export const TwitterProvider = ({ children }) => {
           method: "GET",
         })
           .then(async (pinataResponse) => {
-            console.log(pinataResponse);
+            
             if (
               typeof pinataResponse == "undefined" ||
               pinataResponse == null ||
@@ -798,6 +798,7 @@ export const TwitterProvider = ({ children }) => {
       `;
       const sanityResponse = await client.fetch(query);
       const currentUserLikedActivities = sanityResponse[0].liked;
+      if (currentUserLikedActivities === undefined) return true;
 
       const response = currentUserLikedActivities.find(
         (tweet) => tweet._key === tweetId
@@ -827,6 +828,12 @@ export const TwitterProvider = ({ children }) => {
       }
       `;
       const sanityResponse = await client.fetch(query);
+      if (
+        sanityResponse.length === 0 ||
+        !sanityResponse[0].retweeted ||
+        sanityResponse[0].retweeted?.length === 0
+      )
+        return true;
       const currentUserRetweetedActivities = sanityResponse[0].retweeted;
 
       const response = currentUserRetweetedActivities.find(
@@ -1128,6 +1135,8 @@ export const TwitterProvider = ({ children }) => {
         createUserProfile,
         trends,
         actionOnTweet,
+        getProfileImageUrl
+        
       }}
     >
       {children}
