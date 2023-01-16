@@ -16,6 +16,7 @@ const style = {
   formLowerContainer: `flex mt-2`,
   iconsContainer: `text-twitter flex flex-1 items-center`,
   icon: `ml-2 mr-2 text-xl `,
+  iconInactive: `ml-2 mr-2 text-xl text-twitter/50`,
   submitGeneral: `px-6 py-2 rounded-3xl font-bold`,
   inactiveSubmit: `bg-twitterLight text-white dark:bg-twitterDark dark:text-[#95999e]`,
   activeSubmit: `bg-twitter text-white dark:text-black`,
@@ -30,7 +31,7 @@ const TweetBox = () => {
   const postTweet = async (e) => {
     e.preventDefault();
     if (!tweetMessage) return;
-    const tweetId = `${currentAccount}_${Date.now()}`;
+    const tweetId = `${currentUser._id}_${Date.now()}`;
     const tweetDoc = {
       _id: tweetId,
       _type: "tweets",
@@ -101,11 +102,11 @@ const TweetBox = () => {
           <div className={style.formLowerContainer}>
             <div className={style.iconsContainer}>
               <BsCardImage className={style.icon} />
-              <RiFileGifLine className={style.icon} />
-              <RiBarChartHorizontalFill className={style.icon} />
-              <BsEmojiSmile className={style.icon} />
-              <IoMdCalendar className={style.icon} />
-              <MdOutlineLocationOn className={style.icon} />
+              <RiFileGifLine className={style.iconInactive} />
+              <RiBarChartHorizontalFill className={style.iconInactive} />
+              <BsEmojiSmile className={style.iconInactive} />
+              <IoMdCalendar className={style.iconInactive} />
+              <MdOutlineLocationOn className={style.iconInactive} />
             </div>
             <button
               type="submit"

@@ -28,6 +28,14 @@ Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&ut
 
 
 // to dos
+
+
+remove wallet dependency
+image support in tweets
+reply tweet section
+share tweet section
+nft market place with selling and showcase
+web 2.0 support
 cursor based pagination
 implement new tweets button when scroll
 infinite scroll
@@ -37,6 +45,9 @@ update contract
 upgradable contract
 individual tweet counters
 change dependency of walletAddress
+getuserdetails's tweets query and fetch tweets query dependency
+google trends api
+
 
 
 

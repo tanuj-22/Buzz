@@ -4,8 +4,6 @@ import { TwitterProvider } from "../context/TwitterContext";
 import { ThemeProvider } from "next-themes";
 
 function MyApp({ Component, pageProps }) {
-  
-
   return (
     <ThemeProvider enableSystem={true} attribute="class">
       <TwitterProvider>

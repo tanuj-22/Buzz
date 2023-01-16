@@ -35,7 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/python-serverless 
+/serverless_function_twitter_data
 #above folder is added as separate project in github
 
 

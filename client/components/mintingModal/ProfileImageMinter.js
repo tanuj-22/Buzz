@@ -31,7 +31,8 @@ const getEthereumContract = async () => {
 
 const ProfileImageMinter = () => {
   const router = useRouter();
-  const { currentAccount, setAppStatus } = useContext(TwitterContext);
+  const { currentAccount, setAppStatus, currentUser } =
+    useContext(TwitterContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("initial");
@@ -72,7 +73,20 @@ const ProfileImageMinter = () => {
       description: description,
       image: `ipfs://${ipfsImageHash}`,
     };
-
+    await client.create({
+      _type: "nfts",
+      name: name,
+      description: description,
+      imageUri: `${ipfsImageHash}`,
+      creator: {
+        _type: "reference",
+        _ref: currentUser._id,
+      },
+      owner: {
+        _type: "reference",
+        _ref: currentUser._id,
+      },
+    });
     const ipfsJsonHash = await pinJSONToIPFS(imageMetadata);
 
     if (
@@ -89,6 +103,7 @@ const ProfileImageMinter = () => {
         .set({ profileImage: ipfsImageHash })
         .set({ isProfileImageNft: true })
         .commit();
+
     const contract = await getEthereumContract();
 
     const trasactionParameters = {

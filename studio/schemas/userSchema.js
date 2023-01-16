@@ -32,7 +32,6 @@ export const userSchema = {
       name: "email",
       title: "Email",
       type: "string",
-      
     },
     {
       name: "profileImage",
@@ -55,5 +54,77 @@ export const userSchema = {
       type: "array",
       of: [{ type: "reference", to: [{ type: "tweets" }] }],
     },
+    {
+      name: "following",
+      title: "Following",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "users" }] }],
+    },
+    {
+      name: "followers",
+      title: "Followers",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "users" }] }],
+    },
+    {
+      name: "activities",
+      title: "Activities",
+      type: "object",
+      fields: [
+        {
+          name: "likedTweets",
+          title: "Liked Tweets",
+          type: "array",
+          of: [{ type: "reference", to: [{ type: "tweets" }] }],
+          validation: Rule => Rule.unique()
+        },
+        {
+          name: "retweetedTweets",
+          title: "Retweeted Tweets",
+          type: "array",
+          of: [{ type: "reference", to: [{ type: "tweets" }] }],
+          validation: Rule => Rule.unique()
+        },
+        {
+          name: "repliedTweets",
+          title: "Replied Tweets",
+          type: "array",
+          of: [{ type: "reference", to: [{ type: "tweets" }] }],
+          validation: Rule => Rule.unique()
+        },
+        {
+          name: "quotedTweets",
+          title: "Quoted Tweets",
+          type: "array",
+          of: [{ type: "reference", to: [{ type: "tweets" }] }],
+          validation: Rule => Rule.unique()
+        },
+      ],
+    },
+    {
+      name:"bookmarks",
+      title:"Bookmarks",
+      type:"array",
+      of:[{type:"reference", to:[{type:"tweets"}]}]
+    },
+    {
+      name:"lists",
+      title:"Lists",
+      type:"array",
+      of:[{type:"reference", to:[{type:"users"}]}]
+    },
+    {
+      name: "nftsOwned",
+      title: "NFTs Owned",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "nfts" }] }],
+    },
+    {
+      name: "nftsCreated",
+      title: "NFTs Created",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "nfts" }] }],
+    }
+
   ],
 };

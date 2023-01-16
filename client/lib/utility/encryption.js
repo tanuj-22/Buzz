@@ -76,7 +76,7 @@ export const compressImage = async (file) => {
   return new Promise(async (resolve, reject) => {
     const imageFile = file;
     const options = {
-      maxSizeMB: 0.01,
+      // maxSizeMB: 0.01,
       maxWidthOrHeight: 400,
       useWebWorker: true,
     };
@@ -112,6 +112,10 @@ export const uploadAndEncryptImage = async (imagefile) => {
 
 export const decryptImage = async (data) => {
   return new Promise(async (resolve, reject) => {
+    // if (typeof data === "undefined") {
+    //   reject(new Error("Error decrypting image"));
+    //   return;
+    // }
     var enctext = Buffer.from(data);
 
     try {
