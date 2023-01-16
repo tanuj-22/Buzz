@@ -144,10 +144,11 @@ export const TwitterProvider = ({ children }) => {
   const getProfileImageUrl = async (imageUri, isNft) => {
     return new Promise(async (resolve, reject) => {
       if (isNft) {
-        await fetch("https://ipfs.io/ipfs/" + imageUri, {
+        await fetch("https://gateway.pinata.cloud/ipfs/" + imageUri, {
           method: "GET",
         })
           .then(async (pinataResponse) => {
+            console.log(pinataResponse);
             if (
               typeof pinataResponse == "undefined" ||
               pinataResponse == null ||
