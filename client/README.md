@@ -26,16 +26,16 @@ pnpm create next-app --example with-tailwindcss with-tailwindcss-app
 
 Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
 
+<!-- // to dos -->
 
-// to dos
-
-
-remove wallet dependency
+<!-- remove wallet dependency
 image support in tweets
 reply tweet section
 share tweet section
 nft market place with selling and showcase
 web 2.0 support
+tweets page
+user page
 cursor based pagination
 implement new tweets button when scroll
 infinite scroll
@@ -46,9 +46,6 @@ upgradable contract
 individual tweet counters
 change dependency of walletAddress
 getuserdetails's tweets query and fetch tweets query dependency
-google trends api
+google trends api -->
 
-
-
-
-### a web3 app that functions as both a microblogging and a social media website It is a decentralised app where you can display and mint your digital assets. The digital assets are stored on the IPFS network, a peer-to-peer decentralised network, ensuring constant content availability. Files stored on ipfs are also encrypted so that only authorised users can access them. All of these assets' records are kept on the Ethereum blockchain for transparency. The following are some of the technologies used in the project : next.js, ethers.js, node.js,ipfs, typescript, tailwind, and sanity cms ( initial build, to be replaced with mongodb).
+### a web3 app that functions as both a microblogging and a social media website. It is a decentralised app where you can display and mint your digital assets. The digital assets are stored on the IPFS network, a peer-to-peer decentralised network, ensuring constant content availability. Files stored on ipfs are also encrypted so that only authorised users can access them. All of these assets' records are kept on the Ethereum blockchain for transparency. The following are some of the technologies used in the project : Next.js, ethers.js, node.js,ipfs, typescript, tailwind, and sanity cms ( initial build, to be replaced with mongodb).
